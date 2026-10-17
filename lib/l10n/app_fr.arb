@@ -1,0 +1,241 @@
+{
+  "@@locale": "fr",
+
+  "appName": "StayEase",
+  "language": "Langue",
+
+  "loginTitle": "Connexion",
+  "email": "Email",
+  "password": "Mot de passe",
+  "signIn": "Se connecter",
+  "createAccount": "Créer un compte",
+  "createAccountButton": "Créer le compte",
+  "loginError": "Email ou mot de passe incorrect",
+  "registerError": "Impossible de créer le compte",
+  "or": "ou",
+  "continueWithGoogle": "Continuer avec Google",
+  "logout": "Se déconnecter",
+
+  "errorGoogleUnsupported": "Google Sign-In est disponible sur Android uniquement. Lancez l'application sur l'émulateur Android.",
+  "errorGoogleToken": "Jeton Google introuvable",
+  "errorGoogleFailed": "Connexion Google impossible ({code})",
+  "@errorGoogleFailed": {
+    "placeholders": { "code": { "type": "String" } }
+  },
+  "errorFirebase": "Erreur Firebase : {code}",
+  "@errorFirebase": {
+    "placeholders": { "code": { "type": "String" } }
+  },
+  "errorNotLoggedIn": "Utilisateur non connecté",
+  "errorFirestoreTimeout": "Firestore ne répond pas. Vérifiez que la base est créée et que la connexion internet fonctionne.",
+  "errorWithMessage": "Erreur : {error}",
+  "@errorWithMessage": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "amountTnd": "{amount} TND",
+  "@amountTnd": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "pricePerNightShort": "{price} TND / nuit",
+  "@pricePerNightShort": {
+    "placeholders": { "price": { "type": "String" } }
+  },
+  "nightsCount": "{count, plural, =0{0 nuit} =1{1 nuit} other{{count} nuits}}",
+  "@nightsCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cityTunisia": "{city}, Tunisie",
+  "@cityTunisia": {
+    "placeholders": { "city": { "type": "String" } }
+  },
+  "dateRange": "{from} → {to}",
+  "@dateRange": {
+    "placeholders": { "from": { "type": "String" }, "to": { "type": "String" } }
+  },
+  "arrival": "Arrivée",
+  "departure": "Départ",
+  "arrivalDate": "Date d'arrivée",
+  "departureDate": "Date de départ",
+  "hotel": "Hôtel",
+  "address": "Adresse",
+  "stayDuration": "Durée du séjour",
+  "pricePerNight": "Prix par nuit",
+  "totalPrice": "Prix total",
+  "totalAmount": "Montant total",
+  "bookingSummary": "Récapitulatif de votre réservation",
+
+  "hotelsInTunisia": "Hôtels en Tunisie",
+  "bookThisHotel": "Réserver cet hôtel",
+  "myBookings": "Mes réservations",
+
+  "bookYourStayIn": "Réservez votre séjour à\n{city}",
+  "@bookYourStayIn": {
+    "placeholders": { "city": { "type": "String" } }
+  },
+  "chooseDatesAndBook": "Choisissez vos dates et réservez {hotel}.",
+  "@chooseDatesAndBook": {
+    "placeholders": { "hotel": { "type": "String" } }
+  },
+  "selectedHotel": "Hôtel sélectionné",
+  "perkClimate": "Climat favorable",
+  "perkPrices": "Prix compétitifs",
+  "perkStars": "Hôtels 4-5 étoiles",
+  "perkWifi": "WiFi gratuit",
+  "whyBookNow": "Pourquoi réserver maintenant ?",
+  "reasonBestPrice": "Meilleur prix garanti",
+  "reasonBestPriceDesc": "Réservez aujourd'hui et économisez jusqu'à 30%",
+  "reasonFreeCancel": "Annulation gratuite",
+  "reasonFreeCancelDesc": "Annulez jusqu'à 24h avant votre arrivée",
+  "reasonPremium": "Service premium",
+  "reasonPremiumDesc": "Assistance 24/7 pendant votre séjour",
+  "selectYourDates": "Sélectionnez vos dates",
+  "selectYourDatesSubtitle": "Choisissez vos dates d'arrivée et de départ",
+  "stepCity": "Ville",
+  "stepDates": "Dates",
+  "stepHotel": "Hôtel",
+  "stepPayment": "Paiement",
+  "destination": "Destination : {city}",
+  "@destination": {
+    "placeholders": { "city": { "type": "String" } }
+  },
+  "selected": "Sélectionné",
+  "selectArrivalHelper": "Sélectionnez votre date d'arrivée",
+  "stayDurationHelper": "Durée du séjour : {duration}",
+  "@stayDurationHelper": {
+    "placeholders": { "duration": { "type": "String" } }
+  },
+  "required": "Requis",
+  "datePlaceholder": "jj/mm/aaaa",
+  "suggestions": "Suggestions :",
+  "today": "Aujourd'hui",
+  "inDays": "{count, plural, =1{Dans 1 jour} other{Dans {count} jours}}",
+  "@inDays": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "nightsInCity": "{count, plural, =0{0 nuit à {city}} =1{1 nuit à {city}} other{{count} nuits à {city}}}",
+  "@nightsInCity": {
+    "placeholders": { "count": { "type": "int" }, "city": { "type": "String" } }
+  },
+  "totalWithAmount": "Total : {amount}",
+  "@totalWithAmount": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "continueButton": "Continuer",
+  "changeDestination": "Changer de destination",
+
+  "finalizeBooking": "Finalisez votre réservation",
+  "finalizeBookingSubtitle": "Choisissez votre méthode de paiement pour confirmer votre séjour",
+  "choosePaymentMethod": "Choisissez votre méthode de paiement",
+  "onlinePayment": "Paiement en ligne",
+  "onlinePaymentDesc": "Payez en ligne de manière sécurisée",
+  "cashPayment": "Paiement en espèces",
+  "cashPaymentDesc": "Payez à l'hôtel à votre arrivée",
+  "pleaseChoosePaymentMethod": "Veuillez choisir une méthode de paiement",
+  "mustAcceptTermsFull": "Vous devez accepter les conditions générales",
+  "mustAcceptTerms": "Vous devez accepter les conditions",
+  "paymentCancelled": "Paiement annulé",
+  "saveError": "Erreur lors de l'enregistrement : {error}",
+  "@saveError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "iAccept": "J'accepte les ",
+  "termsAndConditions": "conditions générales",
+  "andThe": " et la ",
+  "privacyPolicy": "politique de confidentialité",
+  "continueToPayment": "Continuer vers le paiement",
+  "confirmBooking": "Confirmer la réservation",
+  "backToDates": "Retour aux dates",
+
+  "securePayment": "Paiement 100% sécurisé",
+  "securePaymentDesc": "Vos données sont cryptées avec la technologie SSL",
+  "cardHolder": "Titulaire de la carte",
+  "cardHolderHint": "Nom tel qu'il apparaît sur la carte",
+  "cardHolderRequired": "Le nom du titulaire est obligatoire",
+  "nameTooShort": "Nom trop court",
+  "lettersOnly": "Lettres uniquement",
+  "cardNumber": "Numéro de carte",
+  "cardNumberRequired": "Numéro de carte obligatoire",
+  "cardNumberLength": "Le numéro doit contenir {count} chiffres",
+  "@cardNumberLength": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cvvCode": "Code CVV",
+  "cvvRequired": "CVV obligatoire",
+  "digitsCount": "{count, plural, =1{1 chiffre} other{{count} chiffres}}",
+  "@digitsCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "expiryMonth": "Mois d'expiration",
+  "monthHint": "Mois",
+  "chooseMonth": "Choisissez le mois",
+  "expiryYear": "Année d'expiration",
+  "yearHint": "Année",
+  "chooseYear": "Choisissez l'année",
+  "cardExpired": "Carte expirée",
+  "payAmount": "Payer {amount}",
+  "@payAmount": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "cancelPayment": "Annuler le paiement",
+  "sslSecured": "SSL sécurisé",
+  "encryptedData": "Données cryptées",
+  "support247": "Support 24/7",
+  "expiryDate": "Date d'expiration",
+  "namePlaceholder": "NOM PRÉNOM",
+  "expiryPlaceholder": "MM/AA",
+
+  "cancelBookingQuestion": "Annuler la réservation ?",
+  "no": "Non",
+  "yesCancel": "Oui, annuler",
+  "bookingCancelled": "Réservation annulée",
+  "reference": "Référence",
+  "duration": "Durée",
+  "payment": "Paiement",
+  "online": "En ligne",
+  "cash": "Espèces",
+  "status": "Statut",
+  "total": "Total",
+  "statusConfirmed": "Confirmée",
+  "statusPending": "En attente",
+  "statusCancelled": "Annulée",
+  "loadingError": "Erreur de chargement",
+  "noBookings": "Aucune réservation",
+  "noBookingsYet": "Vous n'avez pas encore réservé.",
+  "noResultsForFilter": "Aucun résultat pour ce filtre.",
+  "backToMap": "Retour à la carte",
+  "myBookingsSubtitle": "Consultez et gérez toutes vos réservations",
+  "newBooking": "Nouvelle réservation",
+  "totalBookings": "Réservations totales",
+  "confirmedPlural": "Confirmées",
+  "pendingPlural": "En attente",
+  "filterByStatus": "Filtrer par statut",
+  "filterAll": "Toutes ({count})",
+  "@filterAll": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "filterConfirmed": "Confirmées ({count})",
+  "@filterConfirmed": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "filterPending": "En attente ({count})",
+  "@filterPending": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "filterCancelled": "Annulées ({count})",
+  "@filterCancelled": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "searchHint": "Rechercher un hôtel ou une ville...",
+  "paymentMethod": "Méthode de paiement",
+  "bookedOn": "Réservée le {date}",
+  "@bookedOn": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "dateAtTime": "{date} à {time}",
+  "@dateAtTime": {
+    "placeholders": { "date": { "type": "String" }, "time": { "type": "String" } }
+  },
+  "details": "Détails",
+  "cancel": "Annuler"
+}

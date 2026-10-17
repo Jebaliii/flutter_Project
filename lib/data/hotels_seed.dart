@@ -1,0 +1,26 @@
+import '../models/hotel.dart';
+
+const seedHotels = <Hotel>[
+  Hotel(id: '1', name: 'Médina Palace', city: 'Tunis', lat: 36.7992, lng: 10.1706, stars: 4, pricePerNight: 220),
+  Hotel(id: '2', name: 'Carthage Bay', city: 'Tunis', lat: 36.8528, lng: 10.3231, stars: 5, pricePerNight: 380),
+  Hotel(id: '3', name: 'Sidi Bou Blue', city: 'Sidi Bou Saïd', lat: 36.8700, lng: 10.3411, stars: 4, pricePerNight: 260),
+  Hotel(id: '4', name: 'Gammarth Resort', city: 'Gammarth', lat: 36.9333, lng: 10.2833, stars: 5, pricePerNight: 420),
+  Hotel(id: '5', name: 'Hammamet Sun', city: 'Hammamet', lat: 36.4000, lng: 10.6167, stars: 5, pricePerNight: 310),
+  Hotel(id: '6', name: 'Yasmine Beach', city: 'Hammamet', lat: 36.3750, lng: 10.5400, stars: 4, pricePerNight: 190),
+  Hotel(id: '7', name: 'Nabeul Garden', city: 'Nabeul', lat: 36.4513, lng: 10.7357, stars: 3, pricePerNight: 120),
+  Hotel(id: '8', name: 'Port El Kantaoui Palace', city: 'Sousse', lat: 35.8918, lng: 10.5946, stars: 5, pricePerNight: 340),
+  Hotel(id: '9', name: 'Sousse Medina', city: 'Sousse', lat: 35.8256, lng: 10.6084, stars: 3, pricePerNight: 110),
+  Hotel(id: '10', name: 'Monastir Marina', city: 'Monastir', lat: 35.7643, lng: 10.8113, stars: 4, pricePerNight: 170),
+  Hotel(id: '11', name: 'Mahdia Beach', city: 'Mahdia', lat: 35.5047, lng: 11.0622, stars: 4, pricePerNight: 160),
+  Hotel(id: '12', name: 'Sfax Central', city: 'Sfax', lat: 34.7406, lng: 10.7603, stars: 3, pricePerNight: 100),
+  Hotel(id: '13', name: 'Kairouan Heritage', city: 'Kairouan', lat: 35.6781, lng: 10.0963, stars: 3, pricePerNight: 95),
+  Hotel(id: '14', name: 'Tabarka Coral', city: 'Tabarka', lat: 36.9544, lng: 8.7580, stars: 4, pricePerNight: 180),
+  Hotel(id: '15', name: 'Bizerte Vieux Port', city: 'Bizerte', lat: 37.2744, lng: 9.8739, stars: 3, pricePerNight: 105),
+  Hotel(id: '16', name: 'Djerba Lagoon', city: 'Djerba', lat: 33.8750, lng: 10.8575, stars: 5, pricePerNight: 350),
+  Hotel(id: '17', name: 'Zarzis Oasis', city: 'Zarzis', lat: 33.5039, lng: 11.1122, stars: 4, pricePerNight: 150),
+  Hotel(id: '18', name: 'Gabès Palm', city: 'Gabès', lat: 33.8815, lng: 10.0982, stars: 3, pricePerNight: 90),
+  Hotel(id: '19', name: 'Tozeur Dunes', city: 'Tozeur', lat: 33.9197, lng: 8.1335, stars: 4, pricePerNight: 175),
+  Hotel(id: '20', name: 'Douz Sahara Camp', city: 'Douz', lat: 33.4569, lng: 9.0206, stars: 3, pricePerNight: 130),
+  Hotel(id: '21', name: 'Matmata Troglodyte', city: 'Matmata', lat: 33.5446, lng: 9.9672, stars: 2, pricePerNight: 70),
+  Hotel(id: '22', name: 'Tataouine Ksar', city: 'Tataouine', lat: 32.9297, lng: 10.4518, stars: 3, pricePerNight: 85),
+];
