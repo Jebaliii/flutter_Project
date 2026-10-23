@@ -47,6 +47,6 @@ class LocaleController extends ChangeNotifier {
     return fallback;
   }
 
-  static bool _isSupported(String code) => AppLocalizations.supportedLocales
-      .any((l) => l.languageCode == code);
+  static bool _isSupported(String code) =>
+      AppLocalizations.supportedLocales.any((l) => l.languageCode == code);
 }

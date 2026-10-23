@@ -112,6 +112,18 @@ abstract class AppLocalizations {
   /// **'Langue'**
   String get language;
 
+  /// No description provided for @lightTheme.
+  ///
+  /// In fr, this message translates to:
+  /// **'Thème clair'**
+  String get lightTheme;
+
+  /// No description provided for @darkTheme.
+  ///
+  /// In fr, this message translates to:
+  /// **'Thème sombre'**
+  String get darkTheme;
+
   /// No description provided for @loginTitle.
   ///
   /// In fr, this message translates to:
@@ -1023,6 +1035,432 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Annuler'**
   String get cancel;
+
+  /// No description provided for @fillAllFields.
+  ///
+  /// In fr, this message translates to:
+  /// **'Veuillez remplir tous les champs'**
+  String get fillAllFields;
+
+  /// No description provided for @errorInvalidCredentials.
+  ///
+  /// In fr, this message translates to:
+  /// **'E-mail ou mot de passe incorrect'**
+  String get errorInvalidCredentials;
+
+  /// No description provided for @errorEmailInUse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet e-mail est déjà utilisé par un autre compte'**
+  String get errorEmailInUse;
+
+  /// No description provided for @errorWeakPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe trop faible (6 caractères minimum)'**
+  String get errorWeakPassword;
+
+  /// No description provided for @errorInvalidEmail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse e-mail invalide'**
+  String get errorInvalidEmail;
+
+  /// No description provided for @errorNetwork.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas de connexion Internet. Vérifiez votre réseau et réessayez.'**
+  String get errorNetwork;
+
+  /// No description provided for @errorTooManyRequests.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trop de tentatives. Réessayez dans quelques minutes.'**
+  String get errorTooManyRequests;
+
+  /// No description provided for @errorPermissionDenied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accès refusé. Vous n\'avez pas les droits pour cette action.'**
+  String get errorPermissionDenied;
+
+  /// No description provided for @errorUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une erreur inattendue est survenue. Veuillez réessayer.'**
+  String get errorUnknown;
+
+  /// No description provided for @retry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réessayer'**
+  String get retry;
+
+  /// No description provided for @mapLoadError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible de charger la carte. Vérifiez votre connexion.'**
+  String get mapLoadError;
+
+  /// No description provided for @logoutError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échec de la déconnexion. Veuillez réessayer.'**
+  String get logoutError;
+
+  /// No description provided for @bookingConfirmedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réservation enregistrée !'**
+  String get bookingConfirmedTitle;
+
+  /// No description provided for @bookingConfirmedOnline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement accepté. Votre séjour est confirmé.'**
+  String get bookingConfirmedOnline;
+
+  /// No description provided for @bookingConfirmedCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre séjour est réservé. Vous réglerez à l\'hôtel.'**
+  String get bookingConfirmedCash;
+
+  /// No description provided for @seeMyBookings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir mes réservations'**
+  String get seeMyBookings;
+
+  /// No description provided for @notifBookingConfirmedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réservation confirmée ✅'**
+  String get notifBookingConfirmedTitle;
+
+  /// No description provided for @notifBookingConfirmedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'{hotel} · {dates}. Paiement accepté, à bientôt !'**
+  String notifBookingConfirmedBody(String hotel, String dates);
+
+  /// No description provided for @notifBookingPendingTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réservation en attente ⏳'**
+  String get notifBookingPendingTitle;
+
+  /// No description provided for @notifBookingPendingBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'{hotel} · {dates}. Paiement à régler à l\'hôtel.'**
+  String notifBookingPendingBody(String hotel, String dates);
+
+  /// No description provided for @navExplore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Explorer'**
+  String get navExplore;
+
+  /// No description provided for @tabMap.
+  ///
+  /// In fr, this message translates to:
+  /// **'Carte'**
+  String get tabMap;
+
+  /// No description provided for @tabList.
+  ///
+  /// In fr, this message translates to:
+  /// **'Liste'**
+  String get tabList;
+
+  /// No description provided for @registerAsAdmin.
+  ///
+  /// In fr, this message translates to:
+  /// **'S\'inscrire en tant qu\'administrateur'**
+  String get registerAsAdmin;
+
+  /// No description provided for @adminCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code administrateur'**
+  String get adminCode;
+
+  /// No description provided for @errorAdminCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code administrateur invalide.'**
+  String get errorAdminCode;
+
+  /// No description provided for @errorAccountDisabled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce compte a été bloqué par un administrateur.'**
+  String get errorAccountDisabled;
+
+  /// No description provided for @adminTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Administration'**
+  String get adminTitle;
+
+  /// No description provided for @adminDashboard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tableau de bord'**
+  String get adminDashboard;
+
+  /// No description provided for @adminBookings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réservations'**
+  String get adminBookings;
+
+  /// No description provided for @adminHotels.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hôtels'**
+  String get adminHotels;
+
+  /// No description provided for @adminUsers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilisateurs'**
+  String get adminUsers;
+
+  /// No description provided for @clientView.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vue client'**
+  String get clientView;
+
+  /// No description provided for @revenue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenus (réservations confirmées)'**
+  String get revenue;
+
+  /// No description provided for @recentBookings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernières réservations'**
+  String get recentBookings;
+
+  /// No description provided for @searchBookingsHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hôtel, ville ou e-mail client...'**
+  String get searchBookingsHint;
+
+  /// No description provided for @markConfirmed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer'**
+  String get markConfirmed;
+
+  /// No description provided for @markPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mettre en attente'**
+  String get markPending;
+
+  /// No description provided for @markCancelled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler la réservation'**
+  String get markCancelled;
+
+  /// No description provided for @bookingUpdated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réservation mise à jour'**
+  String get bookingUpdated;
+
+  /// No description provided for @bookingDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réservation supprimée'**
+  String get bookingDeleted;
+
+  /// No description provided for @delete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get delete;
+
+  /// No description provided for @edit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get edit;
+
+  /// No description provided for @save.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get save;
+
+  /// No description provided for @deleteQuestion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer « {name} » ?'**
+  String deleteQuestion(String name);
+
+  /// No description provided for @irreversible.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette action est irréversible.'**
+  String get irreversible;
+
+  /// No description provided for @addHotel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un hôtel'**
+  String get addHotel;
+
+  /// No description provided for @editHotel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier l\'hôtel'**
+  String get editHotel;
+
+  /// No description provided for @hotelName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de l\'hôtel'**
+  String get hotelName;
+
+  /// No description provided for @latitude.
+  ///
+  /// In fr, this message translates to:
+  /// **'Latitude'**
+  String get latitude;
+
+  /// No description provided for @longitude.
+  ///
+  /// In fr, this message translates to:
+  /// **'Longitude'**
+  String get longitude;
+
+  /// No description provided for @pricePerNightTnd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix par nuit (TND)'**
+  String get pricePerNightTnd;
+
+  /// No description provided for @stars.
+  ///
+  /// In fr, this message translates to:
+  /// **'Étoiles'**
+  String get stars;
+
+  /// No description provided for @invalidNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nombre invalide'**
+  String get invalidNumber;
+
+  /// No description provided for @hotelSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hôtel enregistré'**
+  String get hotelSaved;
+
+  /// No description provided for @hotelDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hôtel supprimé'**
+  String get hotelDeleted;
+
+  /// No description provided for @noHotels.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun hôtel'**
+  String get noHotels;
+
+  /// No description provided for @noHotelsDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les clients voient le catalogue intégré ({count} hôtels). Importez-le pour pouvoir le gérer.'**
+  String noHotelsDesc(int count);
+
+  /// No description provided for @importHotels.
+  ///
+  /// In fr, this message translates to:
+  /// **'Importer les hôtels'**
+  String get importHotels;
+
+  /// No description provided for @hotelsImported.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} hôtels importés'**
+  String hotelsImported(int count);
+
+  /// No description provided for @searchUsersHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher un e-mail...'**
+  String get searchUsersHint;
+
+  /// No description provided for @noUsers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun utilisateur'**
+  String get noUsers;
+
+  /// No description provided for @you.
+  ///
+  /// In fr, this message translates to:
+  /// **'(vous)'**
+  String get you;
+
+  /// No description provided for @roleAdmin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Admin'**
+  String get roleAdmin;
+
+  /// No description provided for @roleUser.
+  ///
+  /// In fr, this message translates to:
+  /// **'Client'**
+  String get roleUser;
+
+  /// No description provided for @blocked.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bloqué'**
+  String get blocked;
+
+  /// No description provided for @makeAdmin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nommer administrateur'**
+  String get makeAdmin;
+
+  /// No description provided for @removeAdmin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer les droits admin'**
+  String get removeAdmin;
+
+  /// No description provided for @blockUser.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bloquer'**
+  String get blockUser;
+
+  /// No description provided for @unblockUser.
+  ///
+  /// In fr, this message translates to:
+  /// **'Débloquer'**
+  String get unblockUser;
+
+  /// No description provided for @userUpdated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilisateur mis à jour'**
+  String get userUpdated;
 }
 
 class _AppLocalizationsDelegate

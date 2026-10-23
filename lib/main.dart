@@ -1,30 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 import 'l10n/l10n.dart';
 import 'l10n/locale_controller.dart';
+import 'services/ad_service.dart';
 import 'services/auth_service.dart';
-import 'screens/home/hotels_map_screen.dart';
+import 'services/notification_service.dart';
+import 'screens/admin/admin_shell.dart';
+import 'screens/home/home_shell.dart';
+import 'theme/app_theme.dart';
+import 'theme/theme_controller.dart';
+import 'widgets/animations.dart';
+import 'widgets/app_feedback.dart';
 import 'widgets/language_menu_button.dart';
+import 'widgets/theme_toggle_button.dart';
+
+/// Lets notification taps navigate without a BuildContext.
+final navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  if (NotificationService.isSupported) {
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  }
+
+  // Not awaited: ads and the notification permission dialog must never
+  // delay app start-up.
+  AdService.initialize();
+  NotificationService.instance.init();
 
   final localeController = await LocaleController.load();
+  final themeController = await ThemeController.load();
 
   runApp(
-    ChangeNotifierProvider.value(
-      value: localeController,
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: localeController),
+        ChangeNotifierProvider.value(value: themeController),
+      ],
       child: const MyApp(),
     ),
   );
+
+  NotificationService.instance.attach(_openFromNotification);
+}
+
+/// Opens the screen targeted by a tapped notification (`data.screen`).
+void _openFromNotification(String screen) {
+  final nav = navigatorKey.currentState;
+  if (nav == null) {
+    // App launched from a notification: wait for the first frame.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _openFromNotification(screen),
+    );
+    return;
+  }
+  // Bookings are per user: if logged out, the login page stays shown.
+  if (FirebaseAuth.instance.currentUser == null) return;
+
+  switch (screen) {
+    case NotificationScreens.myBookings:
+      // Home screen as the only route, on the "Mes Réservations" tab.
+      homeTab.value = HomeTab.bookings;
+      nav.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const HomePage()),
+        (route) => false,
+      );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -35,10 +85,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = context.watch<LocaleController>().locale;
+    final themeMode = context.watch<ThemeController>().mode;
 
     // MaterialApp sets the text direction from the locale:
     // 'ar' => right-to-left, 'fr' / 'en' => left-to-right.
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) => context.l10n.appName,
       locale: locale,
@@ -50,10 +102,9 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       localeResolutionCallback: LocaleController.resolve,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: themeMode,
       home: home,
     );
   }
@@ -65,7 +116,7 @@ class MyApp extends StatelessWidget {
 
 class GoogleSignInSection extends StatefulWidget {
   final AuthService authService;
-  final VoidCallback onSuccess;
+  final Future<void> Function(User user) onSuccess;
 
   const GoogleSignInSection({
     super.key,
@@ -84,15 +135,13 @@ class _GoogleSignInSectionState extends State<GoogleSignInSection> {
     setState(() => loading = true);
     try {
       final user = await widget.authService.signInWithGoogle();
+      if (user != null) await widget.onSuccess(user);
       if (!mounted) return;
       setState(() => loading = false);
-      if (user != null) widget.onSuccess();
     } catch (e) {
       if (!mounted) return;
       setState(() => loading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(localizeError(context.l10n, e))),
-      );
+      context.showError(e);
     }
   }
 
@@ -107,7 +156,10 @@ class _GoogleSignInSectionState extends State<GoogleSignInSection> {
             const Expanded(child: Divider()),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(l.or, style: const TextStyle(color: Colors.black54)),
+              child: Text(
+                l.or,
+                style: TextStyle(color: context.colors.onSurfaceVariant),
+              ),
             ),
             const Expanded(child: Divider()),
           ],
@@ -130,7 +182,7 @@ class _GoogleSignInSectionState extends State<GoogleSignInSection> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black26),
+                      border: Border.all(color: context.colors.outlineVariant),
                     ),
                     child: const Text(
                       'G',
@@ -149,10 +201,36 @@ class _GoogleSignInSectionState extends State<GoogleSignInSection> {
   }
 }
 
-void _goHome(BuildContext context) {
+/// Opens the admin interface or the client app depending on the role
+/// stored in `users/{uid}`.
+Future<void> _enterApp(BuildContext context, User user) async {
+  final profile = await AuthService().loadProfile(user);
+  if (!context.mounted) return;
+  homeTab.value = HomeTab.explore;
   Navigator.pushAndRemoveUntil(
     context,
-    MaterialPageRoute(builder: (context) => const HomePage()),
+    MaterialPageRoute(
+      builder: (context) =>
+          profile.isAdmin ? const AdminPage() : const HomePage(),
+    ),
+    (route) => false,
+  );
+}
+
+Future<void> _logout(BuildContext context) async {
+  try {
+    await AuthService().logout();
+  } catch (e) {
+    debugPrint('Logout error: $e');
+    if (context.mounted) context.showError(context.l10n.logoutError);
+    return;
+  }
+
+  if (!context.mounted) return;
+
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (context) => const LoginPage()),
     (route) => false,
   );
 }
@@ -183,22 +261,28 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> login() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    if (email.isEmpty || password.isEmpty) {
+      context.showSnack(context.l10n.fillAllFields);
+      return;
+    }
+
+    FocusScope.of(context).unfocus();
     setState(() => loading = true);
-
-    final user = await authService.login(
-      emailController.text.trim(),
-      passwordController.text.trim(),
-    );
-
-    if (!mounted) return;
-    setState(() => loading = false);
-
-    if (user != null) {
-      _goHome(context);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.loginError)),
-      );
+    try {
+      final user = await authService.login(email, password);
+      if (!mounted) return;
+      if (user != null) {
+        await _enterApp(context, user);
+      } else {
+        context.showError(context.l10n.loginError);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      context.showError(e);
+    } finally {
+      if (mounted) setState(() => loading = false);
     }
   }
 
@@ -208,65 +292,62 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l.loginTitle),
-        actions: const [LanguageMenuButton()],
+        actions: const [ThemeToggleButton(), LanguageMenuButton()],
       ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 420),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  // Email addresses are always written left-to-right.
-                  textDirection: TextDirection.ltr,
-                  decoration: InputDecoration(
-                    labelText: l.email,
-                    border: const OutlineInputBorder(),
+            child: FadeSlideIn(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    // Email addresses are always written left-to-right.
+                    textDirection: TextDirection.ltr,
+                    decoration: InputDecoration(
+                      labelText: l.email,
+                      border: const OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 15),
-                TextField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: l.password,
-                    border: const OutlineInputBorder(),
+                  const SizedBox(height: 15),
+                  TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: l.password,
+                      border: const OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: loading ? null : login,
-                    child: loading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : Text(l.signIn),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: loading ? null : login,
+                      child: loading ? const ButtonSpinner() : Text(l.signIn),
+                    ),
                   ),
-                ),
-                GoogleSignInSection(
-                  authService: authService,
-                  onSuccess: () => _goHome(context),
-                ),
-                const SizedBox(height: 10),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const RegisterPage()),
-                    );
-                  },
-                  child: Text(l.createAccount),
-                ),
-              ],
+                  GoogleSignInSection(
+                    authService: authService,
+                    onSuccess: (user) => _enterApp(context, user),
+                  ),
+                  const SizedBox(height: 10),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegisterPage(),
+                        ),
+                      );
+                    },
+                    child: Text(l.createAccount),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -289,34 +370,48 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final adminCodeController = TextEditingController();
   final AuthService authService = AuthService();
 
   bool loading = false;
+  bool asAdmin = false;
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    adminCodeController.dispose();
     super.dispose();
   }
 
   Future<void> register() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    final adminCode = adminCodeController.text.trim();
+    if (email.isEmpty || password.isEmpty || (asAdmin && adminCode.isEmpty)) {
+      context.showSnack(context.l10n.fillAllFields);
+      return;
+    }
+
+    FocusScope.of(context).unfocus();
     setState(() => loading = true);
-
-    final user = await authService.register(
-      emailController.text.trim(),
-      passwordController.text.trim(),
-    );
-
-    if (!mounted) return;
-    setState(() => loading = false);
-
-    if (user != null) {
-      _goHome(context);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.registerError)),
+    try {
+      final user = await authService.register(
+        email,
+        password,
+        adminCode: asAdmin ? adminCode : null,
       );
+      if (!mounted) return;
+      if (user != null) {
+        await _enterApp(context, user);
+      } else {
+        context.showError(context.l10n.registerError);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      context.showError(e);
+    } finally {
+      if (mounted) setState(() => loading = false);
     }
   }
 
@@ -326,54 +421,78 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l.createAccount),
-        actions: const [LanguageMenuButton()],
+        actions: const [ThemeToggleButton(), LanguageMenuButton()],
       ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 420),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  // Email addresses are always written left-to-right.
-                  textDirection: TextDirection.ltr,
-                  decoration: InputDecoration(
-                    labelText: l.email,
-                    border: const OutlineInputBorder(),
+            child: FadeSlideIn(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    // Email addresses are always written left-to-right.
+                    textDirection: TextDirection.ltr,
+                    decoration: InputDecoration(
+                      labelText: l.email,
+                      border: const OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 15),
-                TextField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: l.password,
-                    border: const OutlineInputBorder(),
+                  const SizedBox(height: 15),
+                  TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: l.password,
+                      border: const OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: loading ? null : register,
-                    child: loading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                  const SizedBox(height: 8),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    secondary: const Icon(Icons.admin_panel_settings),
+                    title: Text(l.registerAsAdmin),
+                    value: asAdmin,
+                    onChanged: (v) => setState(() => asAdmin = v),
+                  ),
+                  // The admin code field only appears for admin sign-up.
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 250),
+                    child: asAdmin
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: TextField(
+                              controller: adminCodeController,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                labelText: l.adminCode,
+                                prefixIcon: const Icon(Icons.key),
+                                border: const OutlineInputBorder(),
+                              ),
+                            ),
                           )
-                        : Text(l.createAccountButton),
+                        : const SizedBox(width: double.infinity),
                   ),
-                ),
-                GoogleSignInSection(
-                  authService: authService,
-                  onSuccess: () => _goHome(context),
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: loading ? null : register,
+                      child: loading
+                          ? const ButtonSpinner()
+                          : Text(l.createAccountButton),
+                    ),
+                  ),
+                  GoogleSignInSection(
+                    authService: authService,
+                    onSuccess: (user) => _enterApp(context, user),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -383,28 +502,30 @@ class _RegisterPageState extends State<RegisterPage> {
 }
 
 // ===============================
-// HOME PAGE (shows the hotels map)
+// HOME PAGE (Drawer + BottomNavigationBar)
 // ===============================
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final AuthService authService = AuthService();
+  Widget build(BuildContext context) =>
+      HomeShell(onLogout: () => _logout(context));
+}
 
-    return HotelsMapScreen(
-      onLogout: () async {
-        await authService.logout();
+// ===============================
+// ADMIN PAGE (role 'admin')
+// ===============================
 
-        if (!context.mounted) return;
+class AdminPage extends StatelessWidget {
+  const AdminPage({super.key});
 
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-          (route) => false,
-        );
-      },
-    );
-  }
+  @override
+  Widget build(BuildContext context) => AdminShell(
+    onLogout: () => _logout(context),
+    onClientView: () => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const HomePage()),
+    ),
+  );
 }

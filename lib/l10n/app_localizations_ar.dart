@@ -16,6 +16,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get language => 'اللغة';
 
   @override
+  String get lightTheme => 'الوضع الفاتح';
+
+  @override
+  String get darkTheme => 'الوضع الداكن';
+
+  @override
   String get loginTitle => 'تسجيل الدخول';
 
   @override
@@ -560,4 +566,232 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get cancel => 'إلغاء';
+
+  @override
+  String get fillAllFields => 'يرجى ملء جميع الحقول';
+
+  @override
+  String get errorInvalidCredentials =>
+      'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+
+  @override
+  String get errorEmailInUse =>
+      'هذا البريد الإلكتروني مستخدم بالفعل من قبل حساب آخر';
+
+  @override
+  String get errorWeakPassword => 'كلمة المرور ضعيفة جدًا (6 أحرف على الأقل)';
+
+  @override
+  String get errorInvalidEmail => 'عنوان البريد الإلكتروني غير صالح';
+
+  @override
+  String get errorNetwork =>
+      'لا يوجد اتصال بالإنترنت. تحقق من الشبكة وحاول مرة أخرى.';
+
+  @override
+  String get errorTooManyRequests =>
+      'محاولات كثيرة جدًا. حاول مرة أخرى بعد بضع دقائق.';
+
+  @override
+  String get errorPermissionDenied =>
+      'تم رفض الوصول. ليس لديك صلاحية لهذا الإجراء.';
+
+  @override
+  String get errorUnknown => 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get mapLoadError => 'تعذر تحميل الخريطة. تحقق من اتصالك.';
+
+  @override
+  String get logoutError => 'فشل تسجيل الخروج. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get bookingConfirmedTitle => 'تم تسجيل الحجز!';
+
+  @override
+  String get bookingConfirmedOnline => 'تم قبول الدفع. إقامتك مؤكدة.';
+
+  @override
+  String get bookingConfirmedCash => 'تم حجز إقامتك. ستدفع في الفندق.';
+
+  @override
+  String get seeMyBookings => 'عرض حجوزاتي';
+
+  @override
+  String get notifBookingConfirmedTitle => 'تم تأكيد الحجز ✅';
+
+  @override
+  String notifBookingConfirmedBody(String hotel, String dates) {
+    return '$hotel · $dates. تم قبول الدفع، نراك قريبًا!';
+  }
+
+  @override
+  String get notifBookingPendingTitle => 'الحجز قيد الانتظار ⏳';
+
+  @override
+  String notifBookingPendingBody(String hotel, String dates) {
+    return '$hotel · $dates. الدفع في الفندق.';
+  }
+
+  @override
+  String get navExplore => 'استكشاف';
+
+  @override
+  String get tabMap => 'الخريطة';
+
+  @override
+  String get tabList => 'القائمة';
+
+  @override
+  String get registerAsAdmin => 'التسجيل كمسؤول';
+
+  @override
+  String get adminCode => 'رمز المسؤول';
+
+  @override
+  String get errorAdminCode => 'رمز المسؤول غير صحيح.';
+
+  @override
+  String get errorAccountDisabled => 'تم حظر هذا الحساب من قبل المسؤول.';
+
+  @override
+  String get adminTitle => 'الإدارة';
+
+  @override
+  String get adminDashboard => 'لوحة التحكم';
+
+  @override
+  String get adminBookings => 'الحجوزات';
+
+  @override
+  String get adminHotels => 'الفنادق';
+
+  @override
+  String get adminUsers => 'المستخدمون';
+
+  @override
+  String get clientView => 'واجهة العميل';
+
+  @override
+  String get revenue => 'الإيرادات (الحجوزات المؤكدة)';
+
+  @override
+  String get recentBookings => 'آخر الحجوزات';
+
+  @override
+  String get searchBookingsHint => 'فندق، مدينة أو بريد العميل...';
+
+  @override
+  String get markConfirmed => 'تأكيد';
+
+  @override
+  String get markPending => 'وضع قيد الانتظار';
+
+  @override
+  String get markCancelled => 'إلغاء الحجز';
+
+  @override
+  String get bookingUpdated => 'تم تحديث الحجز';
+
+  @override
+  String get bookingDeleted => 'تم حذف الحجز';
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get edit => 'تعديل';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String deleteQuestion(String name) {
+    return 'حذف «$name»؟';
+  }
+
+  @override
+  String get irreversible => 'لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get addHotel => 'إضافة فندق';
+
+  @override
+  String get editHotel => 'تعديل الفندق';
+
+  @override
+  String get hotelName => 'اسم الفندق';
+
+  @override
+  String get latitude => 'خط العرض';
+
+  @override
+  String get longitude => 'خط الطول';
+
+  @override
+  String get pricePerNightTnd => 'السعر لليلة (د.ت)';
+
+  @override
+  String get stars => 'النجوم';
+
+  @override
+  String get invalidNumber => 'رقم غير صالح';
+
+  @override
+  String get hotelSaved => 'تم حفظ الفندق';
+
+  @override
+  String get hotelDeleted => 'تم حذف الفندق';
+
+  @override
+  String get noHotels => 'لا توجد فنادق';
+
+  @override
+  String noHotelsDesc(int count) {
+    return 'يرى العملاء الكتالوج المدمج ($count فندقًا). استورده لتتمكن من إدارته.';
+  }
+
+  @override
+  String get importHotels => 'استيراد الفنادق';
+
+  @override
+  String hotelsImported(int count) {
+    return 'تم استيراد $count فندقًا';
+  }
+
+  @override
+  String get searchUsersHint => 'البحث عن بريد إلكتروني...';
+
+  @override
+  String get noUsers => 'لا يوجد مستخدمون';
+
+  @override
+  String get you => '(أنت)';
+
+  @override
+  String get roleAdmin => 'مسؤول';
+
+  @override
+  String get roleUser => 'عميل';
+
+  @override
+  String get blocked => 'محظور';
+
+  @override
+  String get makeAdmin => 'تعيين كمسؤول';
+
+  @override
+  String get removeAdmin => 'إزالة صلاحيات المسؤول';
+
+  @override
+  String get blockUser => 'حظر';
+
+  @override
+  String get unblockUser => 'إلغاء الحظر';
+
+  @override
+  String get userUpdated => 'تم تحديث المستخدم';
 }

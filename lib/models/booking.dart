@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Booking {
   final String id;
+  final String userId;
+  final String userEmail;
   final String hotelId;
   final String hotelName;
   final String city;
@@ -16,6 +18,8 @@ class Booking {
 
   const Booking({
     required this.id,
+    this.userId = '',
+    this.userEmail = '',
     required this.hotelId,
     required this.hotelName,
     required this.city,
@@ -33,6 +37,8 @@ class Booking {
     final d = doc.data() ?? {};
     return Booking(
       id: doc.id,
+      userId: d['userId'] ?? '',
+      userEmail: d['userEmail'] ?? '',
       hotelId: d['hotelId'] ?? '',
       hotelName: d['hotelName'] ?? '',
       city: d['city'] ?? '',

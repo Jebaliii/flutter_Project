@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/l10n.dart';
 import '../../models/hotel.dart';
+import '../../services/ad_service.dart';
 import '../../services/booking_service.dart';
+import '../../services/notification_service.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/animations.dart';
+import '../../widgets/app_feedback.dart';
 import '../../widgets/language_menu_button.dart';
+import '../../widgets/theme_toggle_button.dart';
 import 'card_payment_screen.dart';
-import 'my_bookings_screen.dart';
+import '../home/home_shell.dart';
 
 class PaymentScreen extends StatefulWidget {
   final Hotel hotel;
@@ -82,28 +88,40 @@ class _PaymentScreenState extends State<PaymentScreen> {
         departure: widget.departure,
         paymentMethod: method!,
       );
-      // TODO Phase 7: push notification de confirmation.
+      // Notification triggered by the booking (tap => "Mes Réservations").
+      final dates = l.dateRange(_fmt(widget.arrival), _fmt(widget.departure));
+      NotificationService.instance.showBookingNotification(
+        title: method == 'online'
+            ? l.notifBookingConfirmedTitle
+            : l.notifBookingPendingTitle,
+        body: method == 'online'
+            ? l.notifBookingConfirmedBody(widget.hotel.name, dates)
+            : l.notifBookingPendingBody(widget.hotel.name, dates),
+      );
     } catch (e) {
       if (!mounted) return;
       setState(() => loading = false);
-      _snack(l.saveError(localizeError(l, e)));
+      context.showError(l.saveError(localizeError(l, e)));
       return;
     }
     if (!mounted) return;
     setState(() => loading = false);
 
-    // Go to "Mes Réservations", keeping the map as the root route.
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const MyBookingsScreen()),
-      (route) => route.isFirst,
+    // Lottie "booking saved" animation.
+    await showBookingSuccessDialog(context, online: method == 'online');
+    if (!mounted) return;
+
+    // Interstitial (test ad) after a successful booking, then go to
+    // the "Mes Réservations" tab of the home screen.
+    InterstitialAdManager.instance.show(
+      onDone: () {
+        if (!mounted) return;
+        showHomeTab(context, HomeTab.bookings);
+      },
     );
   }
 
-  void _snack(String msg) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(msg)));
-  }
+  void _snack(String msg) => context.showSnack(msg);
 
   @override
   Widget build(BuildContext context) {
@@ -111,18 +129,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
     final h = widget.hotel;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F4F9),
+      backgroundColor: context.colors.surfaceContainer,
       appBar: AppBar(
         title: Text(l.appName),
         backgroundColor: const Color(0xFF212529),
         foregroundColor: Colors.white,
-        actions: const [LanguageMenuButton()],
+        actions: const [ThemeToggleButton(), LanguageMenuButton()],
       ),
       body: Column(
         children: [
           Container(
             width: double.infinity,
-            color: Colors.white,
+            color: context.colors.surface,
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             child: Center(
               child: ConstrainedBox(
@@ -141,30 +159,41 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     elevation: 6,
                     clipBehavior: Clip.antiAlias,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24)),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              vertical: 28, horizontal: 20),
+                            vertical: 28,
+                            horizontal: 20,
+                          ),
                           decoration: const BoxDecoration(
-                            gradient:
-                                LinearGradient(colors: [_greenDark, _green]),
+                            gradient: LinearGradient(
+                              colors: [_greenDark, _green],
+                            ),
                           ),
                           child: Column(
                             children: [
-                              Text(l.finalizeBooking,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold)),
+                              Text(
+                                l.finalizeBooking,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                               const SizedBox(height: 8),
-                              Text(l.finalizeBookingSubtitle,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 14)),
+                              Text(
+                                l.finalizeBookingSubtitle,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -176,90 +205,116 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               Center(
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 18, vertical: 8),
+                                    horizontal: 18,
+                                    vertical: 8,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFE8F4FD),
+                                    color: context.colors.primaryContainer,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                  child: Text(h.name,
-                                      style: const TextStyle(
-                                          color: Color(0xFF0B5CAD),
-                                          fontWeight: FontWeight.w600)),
+                                  child: Text(
+                                    h.name,
+                                    style: TextStyle(
+                                      color: context.colors.onPrimaryContainer,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 20),
                               Container(
                                 padding: const EdgeInsets.all(20),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFF8F9FA),
+                                  color: context.colors.surfaceContainerHighest,
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(l.bookingSummary,
-                                        style: const TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w600)),
+                                    Text(
+                                      l.bookingSummary,
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
                                     const SizedBox(height: 12),
                                     _Row(l.hotel, h.name),
                                     _Row(l.address, l.cityTunisia(h.city)),
                                     _Row(l.arrival, _fmt(widget.arrival)),
                                     _Row(l.departure, _fmt(widget.departure)),
                                     _Row(l.stayDuration, l.nightsCount(nights)),
-                                    _Row(l.pricePerNight,
-                                        l.amountTnd('${h.pricePerNight}.00')),
-                                    _Row(l.totalPrice, l.amountTnd('$total'),
-                                        big: true),
+                                    _Row(
+                                      l.pricePerNight,
+                                      l.amountTnd('${h.pricePerNight}.00'),
+                                    ),
+                                    _Row(
+                                      l.totalPrice,
+                                      l.amountTnd('$total'),
+                                      big: true,
+                                    ),
                                   ],
                                 ),
                               ),
                               const SizedBox(height: 28),
-                              Text(l.choosePaymentMethod,
-                                  style: const TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600)),
+                              Text(
+                                l.choosePaymentMethod,
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                               const SizedBox(height: 12),
-                              LayoutBuilder(builder: (context, c) {
-                                final online = _MethodCard(
-                                  title: l.onlinePayment,
-                                  subtitle: l.onlinePaymentDesc,
-                                  icon: Icons.credit_card,
-                                  color: _blue,
-                                  selected: method == 'online',
-                                  onTap: () =>
-                                      setState(() => method = 'online'),
-                                );
-                                final cash = _MethodCard(
-                                  title: l.cashPayment,
-                                  subtitle: l.cashPaymentDesc,
-                                  icon: Icons.payments,
-                                  color: _green,
-                                  selected: method == 'cash',
-                                  onTap: () => setState(() => method = 'cash'),
-                                );
-                                if (c.maxWidth < 520) {
-                                  return Column(children: [
-                                    online,
-                                    const SizedBox(height: 12),
-                                    cash,
-                                  ]);
-                                }
-                                return Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(child: online),
-                                    const SizedBox(width: 12),
-                                    Expanded(child: cash),
-                                  ],
-                                );
-                              }),
+                              LayoutBuilder(
+                                builder: (context, c) {
+                                  final online = _MethodCard(
+                                    title: l.onlinePayment,
+                                    subtitle: l.onlinePaymentDesc,
+                                    icon: Icons.credit_card,
+                                    color: _blue,
+                                    selected: method == 'online',
+                                    onTap: () =>
+                                        setState(() => method = 'online'),
+                                  );
+                                  final cash = _MethodCard(
+                                    title: l.cashPayment,
+                                    subtitle: l.cashPaymentDesc,
+                                    icon: Icons.payments,
+                                    color: _green,
+                                    selected: method == 'cash',
+                                    onTap: () =>
+                                        setState(() => method = 'cash'),
+                                  );
+                                  if (c.maxWidth < 520) {
+                                    return Column(
+                                      children: [
+                                        online,
+                                        const SizedBox(height: 12),
+                                        cash,
+                                      ],
+                                    );
+                                  }
+                                  return Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(child: online),
+                                      const SizedBox(width: 12),
+                                      Expanded(child: cash),
+                                    ],
+                                  );
+                                },
+                              ),
                               if (showErrors && method == null)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 8),
-                                  child: Text(l.pleaseChoosePaymentMethod,
-                                      style: const TextStyle(
-                                          color: Colors.red, fontSize: 12)),
+                                  child: Text(
+                                    l.pleaseChoosePaymentMethod,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
                                 ),
                               const SizedBox(height: 20),
                               InkWell(
@@ -278,14 +333,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                           text: l.iAccept,
                                           children: [
                                             TextSpan(
-                                                text: l.termsAndConditions,
-                                                style: const TextStyle(
-                                                    color: Color(0xFF0D6EFD))),
+                                              text: l.termsAndConditions,
+                                              style: const TextStyle(
+                                                color: Color(0xFF0D6EFD),
+                                              ),
+                                            ),
                                             TextSpan(text: l.andThe),
                                             TextSpan(
-                                                text: l.privacyPolicy,
-                                                style: const TextStyle(
-                                                    color: Color(0xFF0D6EFD))),
+                                              text: l.privacyPolicy,
+                                              style: const TextStyle(
+                                                color: Color(0xFF0D6EFD),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                         style: const TextStyle(fontSize: 13),
@@ -297,11 +356,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               if (showErrors && !accepted)
                                 Padding(
                                   // start = left in LTR, right in RTL (Arabic).
-                                  padding:
-                                      const EdgeInsetsDirectional.only(start: 12),
-                                  child: Text(l.mustAcceptTerms,
-                                      style: const TextStyle(
-                                          color: Colors.red, fontSize: 12)),
+                                  padding: const EdgeInsetsDirectional.only(
+                                    start: 12,
+                                  ),
+                                  child: Text(
+                                    l.mustAcceptTerms,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
                                 ),
                               const SizedBox(height: 20),
                               SizedBox(
@@ -311,24 +375,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   style: FilledButton.styleFrom(
                                     backgroundColor: _green,
                                     shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
                                   ),
                                   child: loading
                                       ? const SizedBox(
                                           height: 22,
                                           width: 22,
                                           child: CircularProgressIndicator(
-                                              strokeWidth: 2,
-                                              color: Colors.white),
+                                            strokeWidth: 2,
+                                            color: Colors.white,
+                                          ),
                                         )
                                       : Text(
                                           method == 'online'
                                               ? l.continueToPayment
                                               : l.confirmBooking,
                                           style: const TextStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w600)),
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
                                 ),
                               ),
                               const SizedBox(height: 12),
@@ -340,8 +407,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       : () => Navigator.pop(context),
                                   style: OutlinedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
                                   ),
                                   child: Text(l.backToDates),
                                 ),
@@ -376,24 +443,32 @@ class _Row extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: context.colors.outlineVariant),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: big ? 17 : 14,
-                  fontWeight: big ? FontWeight.w600 : FontWeight.normal)),
+          Text(
+            label,
+            style: TextStyle(
+              color: context.colors.onSurfaceVariant,
+              fontSize: big ? 17 : 14,
+              fontWeight: big ? FontWeight.w600 : FontWeight.normal,
+            ),
+          ),
           const SizedBox(width: 12),
           Flexible(
-            child: Text(value,
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                    fontSize: big ? 18 : 14,
-                    fontWeight: big ? FontWeight.bold : FontWeight.w600)),
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: TextStyle(
+                fontSize: big ? 18 : 14,
+                fontWeight: big ? FontWeight.bold : FontWeight.w600,
+              ),
+            ),
           ),
         ],
       ),
@@ -427,10 +502,10 @@ class _MethodCard extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: selected ? color.withOpacity(0.07) : Colors.white,
+          color: selected ? color.withOpacity(0.07) : context.colors.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: selected ? color : const Color(0xFFE5E7EB),
+            color: selected ? color : context.colors.outlineVariant,
             width: selected ? 2 : 1,
           ),
         ),
@@ -450,19 +525,27 @@ class _MethodCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  Text(subtitle,
-                      style:
-                          const TextStyle(color: Colors.black54, fontSize: 12)),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: context.colors.onSurfaceVariant,
+                      fontSize: 12,
+                    ),
+                  ),
                 ],
               ),
             ),
             Icon(
               selected ? Icons.radio_button_checked : Icons.radio_button_off,
-              color: selected ? color : Colors.black38,
+              color: selected ? color : context.colors.outline,
             ),
           ],
         ),
@@ -499,33 +582,42 @@ class _PaymentStepper extends StatelessWidget {
                 color: done
                     ? _done
                     : active
-                        ? _active
-                        : const Color(0xFFE9ECEF),
+                    ? _active
+                    : context.colors.surfaceContainerHighest,
                 boxShadow: active
                     ? [
                         BoxShadow(
-                            color: _active.withOpacity(0.3),
-                            blurRadius: 0,
-                            spreadRadius: 4)
+                          color: _active.withOpacity(0.3),
+                          blurRadius: 0,
+                          spreadRadius: 4,
+                        ),
                       ]
                     : null,
               ),
               child: done
                   ? const Icon(Icons.check, color: Colors.white, size: 18)
-                  : Text('$step',
+                  : Text(
+                      '$step',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: active ? Colors.white : Colors.black45)),
+                        fontWeight: FontWeight.bold,
+                        color: active
+                            ? Colors.white
+                            : context.colors.onSurfaceVariant,
+                      ),
+                    ),
             ),
             const SizedBox(height: 6),
-            Text(labels[i],
-                style: TextStyle(
-                    fontSize: 11,
-                    color: done
-                        ? Colors.black54
-                        : active
-                            ? _active
-                            : Colors.black45)),
+            Text(
+              labels[i],
+              style: TextStyle(
+                fontSize: 11,
+                color: done
+                    ? context.colors.onSurfaceVariant
+                    : active
+                    ? _active
+                    : context.colors.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       );
@@ -536,13 +628,18 @@ class _PaymentStepper extends StatelessWidget {
               padding: const EdgeInsets.only(top: 15, left: 6, right: 6),
               child: Container(
                 height: 2,
-                color: step < current ? _done : const Color(0xFFE9ECEF),
+                color: step < current
+                    ? _done
+                    : context.colors.surfaceContainerHighest,
               ),
             ),
           ),
         );
       }
     }
-    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: children);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
   }
 }

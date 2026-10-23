@@ -1,0 +1,56 @@
+rules_version = '2';
+
+// Règles Firestore de StayEase (rôles client / admin).
+// Déploiement : firebase deploy --only firestore:rules
+// (ou copier-coller dans Console Firebase > Firestore > Règles).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // Profils : rôle et blocage modifiables uniquement par un admin
+    // (sauf à la création du profil, où l'inscription choisit le rôle).
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid);
+      allow update: if isAdmin() || (isOwner(uid) && (
+        !('role' in resource.data) ||
+        !request.resource.data.diff(resource.data).affectedKeys()
+          .hasAny(['role', 'disabled'])
+      ));
+      allow delete: if isAdmin();
+    }
+
+    // Catalogue : lecture pour tous les connectés, écriture admin.
+    match /hotels/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // Réservations : le client gère les siennes (création, annulation),
+    // l'admin gère tout.
+    match /bookings/{id} {
+      allow read: if isAdmin() ||
+        (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if signedIn() &&
+        request.resource.data.userId == request.auth.uid;
+      allow update: if isAdmin() || (
+        signedIn() && resource.data.userId == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']) &&
+        request.resource.data.status == 'cancelled'
+      );
+      allow delete: if isAdmin();
+    }
+  }
+}

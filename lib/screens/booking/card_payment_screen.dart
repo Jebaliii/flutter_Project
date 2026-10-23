@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 
 import '../../l10n/l10n.dart';
 import '../../models/hotel.dart';
+import '../../theme/app_theme.dart';
 import '../../widgets/language_menu_button.dart';
+import '../../widgets/theme_toggle_button.dart';
 
 class CardPaymentScreen extends StatefulWidget {
   final Hotel hotel;
@@ -94,12 +96,12 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
     final now = DateTime.now();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F4F9),
+      backgroundColor: context.colors.surfaceContainer,
       appBar: AppBar(
         title: Text(l.appName),
         backgroundColor: const Color(0xFF212529),
         foregroundColor: Colors.white,
-        actions: const [LanguageMenuButton()],
+        actions: const [ThemeToggleButton(), LanguageMenuButton()],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -109,7 +111,8 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
             child: Card(
               elevation: 6,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24)),
+                borderRadius: BorderRadius.circular(24),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Form(
@@ -121,16 +124,22 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
                       Center(
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 8),
+                            horizontal: 20,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                                colors: [Color(0xFF3B82F6), Color(0xFF2563EB)]),
+                              colors: [Color(0xFF3B82F6), Color(0xFF2563EB)],
+                            ),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Text(h.name,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600)),
+                          child: Text(
+                            h.name,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -140,20 +149,28 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                              colors: [_green, _greenDark]),
+                            colors: [_green, _greenDark],
+                          ),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(l.securePayment,
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              l.securePayment,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             const SizedBox(height: 4),
-                            Text(l.securePaymentDesc,
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 12)),
+                            Text(
+                              l.securePaymentDesc,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -163,26 +180,37 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
                       Container(
                         padding: const EdgeInsets.all(18),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF8F9FA),
+                          color: context.colors.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: const Color(0xFFE5E7EB)),
+                          border: Border.all(
+                            color: context.colors.outlineVariant,
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(l.bookingSummary,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600)),
+                            Text(
+                              l.bookingSummary,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             const SizedBox(height: 10),
                             _Row(l.hotel, h.name),
                             _Row(l.address, l.cityTunisia(h.city)),
                             _Row(l.arrival, _fmt(widget.arrival)),
                             _Row(l.departure, _fmt(widget.departure)),
                             _Row(l.stayDuration, l.nightsCount(nights)),
-                            _Row(l.pricePerNight,
-                                l.amountTnd('${h.pricePerNight}.00')),
-                            _Row(l.totalAmount, l.amountTnd('${widget.amount}'),
-                                bold: true),
+                            _Row(
+                              l.pricePerNight,
+                              l.amountTnd('${h.pricePerNight}.00'),
+                            ),
+                            _Row(
+                              l.totalAmount,
+                              l.amountTnd('${widget.amount}'),
+                              bold: true,
+                            ),
                           ],
                         ),
                       ),
@@ -257,7 +285,7 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
                                       return l.cardNumberLength(expected);
                                     }
                                     //if (!_luhn(d)) return 'Numéro de carte invalide';
-                                   // return null;
+                                    // return null;
                                   },
                                 ),
                               ],
@@ -312,11 +340,14 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
                                     12,
                                     (i) => DropdownMenuItem(
                                       value: i + 1,
-                                      child: Text((i + 1).toString().padLeft(2, '0')),
+                                      child: Text(
+                                        (i + 1).toString().padLeft(2, '0'),
+                                      ),
                                     ),
                                   ),
                                   onChanged: (v) => setState(() => _month = v),
-                                  validator: (v) => v == null ? l.chooseMonth : null,
+                                  validator: (v) =>
+                                      v == null ? l.chooseMonth : null,
                                 ),
                               ],
                             ),
@@ -363,30 +394,40 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
                           style: FilledButton.styleFrom(
                             backgroundColor: _green,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                           child: _loading
                               ? const SizedBox(
                                   height: 22,
                                   width: 22,
                                   child: CircularProgressIndicator(
-                                      strokeWidth: 2, color: Colors.white),
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
                                 )
-                              : Text(l.payAmount(l.amountTnd('${widget.amount}.00')),
+                              : Text(
+                                  l.payAmount(
+                                    l.amountTnd('${widget.amount}.00'),
+                                  ),
                                   style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600)),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                         ),
                       ),
                       const SizedBox(height: 12),
                       SizedBox(
                         height: 48,
                         child: OutlinedButton(
-                          onPressed:
-                              _loading ? null : () => Navigator.pop(context, false),
+                          onPressed: _loading
+                              ? null
+                              : () => Navigator.pop(context, false),
                           style: OutlinedButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                           child: Text(l.cancelPayment),
                         ),
@@ -396,15 +437,27 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text(l.sslSecured,
-                              style: const TextStyle(
-                                  fontSize: 11, color: Colors.black54)),
-                          Text(l.encryptedData,
-                              style: const TextStyle(
-                                  fontSize: 11, color: Colors.black54)),
-                          Text(l.support247,
-                              style: const TextStyle(
-                                  fontSize: 11, color: Colors.blue)),
+                          Text(
+                            l.sslSecured,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: context.colors.onSurfaceVariant,
+                            ),
+                          ),
+                          Text(
+                            l.encryptedData,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: context.colors.onSurfaceVariant,
+                            ),
+                          ),
+                          Text(
+                            l.support247,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: Colors.blue,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -419,20 +472,19 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
   }
 
   InputDecoration _dec(String hint) => InputDecoration(
-        hintText: hint,
-        filled: true,
-        fillColor: const Color(0xFFF8F9FA),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-        ),
-      );
+    hintText: hint,
+    filled: true,
+    fillColor: context.colors.surfaceContainerHighest,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: context.colors.outlineVariant),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: context.colors.outlineVariant),
+    ),
+  );
 }
 
 // =====================================================
@@ -442,7 +494,9 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
 class _CardNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     var digits = newValue.text.replaceAll(RegExp(r'\D'), '');
     if (digits.length > 16) digits = digits.substring(0, 16);
     final buf = StringBuffer();
@@ -501,7 +555,11 @@ class _CardPreview extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
-          BoxShadow(color: Colors.black26, blurRadius: 12, offset: Offset(0, 6)),
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 12,
+            offset: Offset(0, 6),
+          ),
         ],
       ),
       child: Column(
@@ -518,22 +576,28 @@ class _CardPreview extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
-              Text(brand,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1)),
+              Text(
+                brand,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
+                ),
+              ),
             ],
           ),
           const Spacer(),
-          Text(_numberDisplay,
-              // Keep the 4 digit groups in order in Arabic (RTL).
-              textDirection: TextDirection.ltr,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.w500)),
+          Text(
+            _numberDisplay,
+            // Keep the 4 digit groups in order in Arabic (RTL).
+            textDirection: TextDirection.ltr,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              letterSpacing: 2,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -542,9 +606,13 @@ class _CardPreview extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(l.cardHolder.toUpperCase(),
-                        style: const TextStyle(
-                            color: Colors.white70, fontSize: 9)),
+                    Text(
+                      l.cardHolder.toUpperCase(),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 9,
+                      ),
+                    ),
                     const SizedBox(height: 2),
                     Text(
                       name.trim().isEmpty
@@ -552,7 +620,9 @@ class _CardPreview extends StatelessWidget {
                           : name.toUpperCase(),
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w600),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
@@ -560,14 +630,19 @@ class _CardPreview extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(l.expiryDate.toUpperCase(),
-                      style: const TextStyle(
-                          color: Colors.white70, fontSize: 9)),
+                  Text(
+                    l.expiryDate.toUpperCase(),
+                    style: const TextStyle(color: Colors.white70, fontSize: 9),
+                  ),
                   const SizedBox(height: 2),
-                  Text(exp,
-                      textDirection: TextDirection.ltr,
-                      style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w600)),
+                  Text(
+                    exp,
+                    textDirection: TextDirection.ltr,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -589,17 +664,23 @@ class _BrandChip extends StatelessWidget {
       duration: const Duration(milliseconds: 200),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: active ? const Color(0xFFE8F0FE) : Colors.white,
+        color: active ? Color(0xFFE8F0FE) : context.colors.surface,
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
-            color: active ? const Color(0xFF3B82F6) : const Color(0xFFE5E7EB),
-            width: active ? 2 : 1),
+          color: active ? Color(0xFF3B82F6) : context.colors.outlineVariant,
+          width: active ? 2 : 1,
+        ),
       ),
-      child: Text(text,
-          style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              color: active ? const Color(0xFF1D4ED8) : Colors.black54)),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+          color: active
+              ? const Color(0xFF1D4ED8)
+              : context.colors.onSurfaceVariant,
+        ),
+      ),
     );
   }
 }
@@ -610,10 +691,12 @@ class _Label extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: 6),
-        child: Text(text,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-      );
+    padding: const EdgeInsets.only(bottom: 6),
+    child: Text(
+      text,
+      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+    ),
+  );
 }
 
 class _Row extends StatelessWidget {
@@ -626,24 +709,32 @@ class _Row extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: context.colors.outlineVariant),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 13,
-                  fontWeight: bold ? FontWeight.w600 : FontWeight.normal)),
+          Text(
+            label,
+            style: TextStyle(
+              color: context.colors.onSurfaceVariant,
+              fontSize: 13,
+              fontWeight: bold ? FontWeight.w600 : FontWeight.normal,
+            ),
+          ),
           const SizedBox(width: 12),
           Flexible(
-            child: Text(value,
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                    fontSize: bold ? 15 : 13,
-                    fontWeight: bold ? FontWeight.bold : FontWeight.w600)),
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: TextStyle(
+                fontSize: bold ? 15 : 13,
+                fontWeight: bold ? FontWeight.bold : FontWeight.w600,
+              ),
+            ),
           ),
         ],
       ),

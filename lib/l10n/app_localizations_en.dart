@@ -16,6 +16,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get language => 'Language';
 
   @override
+  String get lightTheme => 'Light theme';
+
+  @override
+  String get darkTheme => 'Dark theme';
+
+  @override
   String get loginTitle => 'Sign in';
 
   @override
@@ -550,4 +556,233 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cancel => 'Cancel';
+
+  @override
+  String get fillAllFields => 'Please fill in all fields';
+
+  @override
+  String get errorInvalidCredentials => 'Incorrect email or password';
+
+  @override
+  String get errorEmailInUse => 'This email is already used by another account';
+
+  @override
+  String get errorWeakPassword => 'Password too weak (at least 6 characters)';
+
+  @override
+  String get errorInvalidEmail => 'Invalid email address';
+
+  @override
+  String get errorNetwork =>
+      'No internet connection. Check your network and try again.';
+
+  @override
+  String get errorTooManyRequests =>
+      'Too many attempts. Try again in a few minutes.';
+
+  @override
+  String get errorPermissionDenied =>
+      'Access denied. You are not allowed to do this.';
+
+  @override
+  String get errorUnknown => 'An unexpected error occurred. Please try again.';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get mapLoadError => 'Unable to load the map. Check your connection.';
+
+  @override
+  String get logoutError => 'Sign-out failed. Please try again.';
+
+  @override
+  String get bookingConfirmedTitle => 'Booking saved!';
+
+  @override
+  String get bookingConfirmedOnline =>
+      'Payment accepted. Your stay is confirmed.';
+
+  @override
+  String get bookingConfirmedCash =>
+      'Your stay is booked. You will pay at the hotel.';
+
+  @override
+  String get seeMyBookings => 'See my bookings';
+
+  @override
+  String get notifBookingConfirmedTitle => 'Booking confirmed ✅';
+
+  @override
+  String notifBookingConfirmedBody(String hotel, String dates) {
+    return '$hotel · $dates. Payment accepted, see you soon!';
+  }
+
+  @override
+  String get notifBookingPendingTitle => 'Booking pending ⏳';
+
+  @override
+  String notifBookingPendingBody(String hotel, String dates) {
+    return '$hotel · $dates. Payment due at the hotel.';
+  }
+
+  @override
+  String get navExplore => 'Explore';
+
+  @override
+  String get tabMap => 'Map';
+
+  @override
+  String get tabList => 'List';
+
+  @override
+  String get registerAsAdmin => 'Register as administrator';
+
+  @override
+  String get adminCode => 'Administrator code';
+
+  @override
+  String get errorAdminCode => 'Invalid administrator code.';
+
+  @override
+  String get errorAccountDisabled =>
+      'This account has been blocked by an administrator.';
+
+  @override
+  String get adminTitle => 'Administration';
+
+  @override
+  String get adminDashboard => 'Dashboard';
+
+  @override
+  String get adminBookings => 'Bookings';
+
+  @override
+  String get adminHotels => 'Hotels';
+
+  @override
+  String get adminUsers => 'Users';
+
+  @override
+  String get clientView => 'Client view';
+
+  @override
+  String get revenue => 'Revenue (confirmed bookings)';
+
+  @override
+  String get recentBookings => 'Latest bookings';
+
+  @override
+  String get searchBookingsHint => 'Hotel, city or client email...';
+
+  @override
+  String get markConfirmed => 'Confirm';
+
+  @override
+  String get markPending => 'Set as pending';
+
+  @override
+  String get markCancelled => 'Cancel booking';
+
+  @override
+  String get bookingUpdated => 'Booking updated';
+
+  @override
+  String get bookingDeleted => 'Booking deleted';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String deleteQuestion(String name) {
+    return 'Delete \"$name\"?';
+  }
+
+  @override
+  String get irreversible => 'This action cannot be undone.';
+
+  @override
+  String get addHotel => 'Add a hotel';
+
+  @override
+  String get editHotel => 'Edit hotel';
+
+  @override
+  String get hotelName => 'Hotel name';
+
+  @override
+  String get latitude => 'Latitude';
+
+  @override
+  String get longitude => 'Longitude';
+
+  @override
+  String get pricePerNightTnd => 'Price per night (TND)';
+
+  @override
+  String get stars => 'Stars';
+
+  @override
+  String get invalidNumber => 'Invalid number';
+
+  @override
+  String get hotelSaved => 'Hotel saved';
+
+  @override
+  String get hotelDeleted => 'Hotel deleted';
+
+  @override
+  String get noHotels => 'No hotels';
+
+  @override
+  String noHotelsDesc(int count) {
+    return 'Clients see the built-in catalogue ($count hotels). Import it to manage it here.';
+  }
+
+  @override
+  String get importHotels => 'Import hotels';
+
+  @override
+  String hotelsImported(int count) {
+    return '$count hotels imported';
+  }
+
+  @override
+  String get searchUsersHint => 'Search an email...';
+
+  @override
+  String get noUsers => 'No users';
+
+  @override
+  String get you => '(you)';
+
+  @override
+  String get roleAdmin => 'Admin';
+
+  @override
+  String get roleUser => 'Client';
+
+  @override
+  String get blocked => 'Blocked';
+
+  @override
+  String get makeAdmin => 'Make administrator';
+
+  @override
+  String get removeAdmin => 'Remove admin rights';
+
+  @override
+  String get blockUser => 'Block';
+
+  @override
+  String get unblockUser => 'Unblock';
+
+  @override
+  String get userUpdated => 'User updated';
 }

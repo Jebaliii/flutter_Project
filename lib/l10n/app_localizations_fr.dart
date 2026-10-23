@@ -16,6 +16,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get language => 'Langue';
 
   @override
+  String get lightTheme => 'Thème clair';
+
+  @override
+  String get darkTheme => 'Thème sombre';
+
+  @override
   String get loginTitle => 'Connexion';
 
   @override
@@ -554,4 +560,237 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get cancel => 'Annuler';
+
+  @override
+  String get fillAllFields => 'Veuillez remplir tous les champs';
+
+  @override
+  String get errorInvalidCredentials => 'E-mail ou mot de passe incorrect';
+
+  @override
+  String get errorEmailInUse =>
+      'Cet e-mail est déjà utilisé par un autre compte';
+
+  @override
+  String get errorWeakPassword =>
+      'Mot de passe trop faible (6 caractères minimum)';
+
+  @override
+  String get errorInvalidEmail => 'Adresse e-mail invalide';
+
+  @override
+  String get errorNetwork =>
+      'Pas de connexion Internet. Vérifiez votre réseau et réessayez.';
+
+  @override
+  String get errorTooManyRequests =>
+      'Trop de tentatives. Réessayez dans quelques minutes.';
+
+  @override
+  String get errorPermissionDenied =>
+      'Accès refusé. Vous n\'avez pas les droits pour cette action.';
+
+  @override
+  String get errorUnknown =>
+      'Une erreur inattendue est survenue. Veuillez réessayer.';
+
+  @override
+  String get retry => 'Réessayer';
+
+  @override
+  String get mapLoadError =>
+      'Impossible de charger la carte. Vérifiez votre connexion.';
+
+  @override
+  String get logoutError => 'Échec de la déconnexion. Veuillez réessayer.';
+
+  @override
+  String get bookingConfirmedTitle => 'Réservation enregistrée !';
+
+  @override
+  String get bookingConfirmedOnline =>
+      'Paiement accepté. Votre séjour est confirmé.';
+
+  @override
+  String get bookingConfirmedCash =>
+      'Votre séjour est réservé. Vous réglerez à l\'hôtel.';
+
+  @override
+  String get seeMyBookings => 'Voir mes réservations';
+
+  @override
+  String get notifBookingConfirmedTitle => 'Réservation confirmée ✅';
+
+  @override
+  String notifBookingConfirmedBody(String hotel, String dates) {
+    return '$hotel · $dates. Paiement accepté, à bientôt !';
+  }
+
+  @override
+  String get notifBookingPendingTitle => 'Réservation en attente ⏳';
+
+  @override
+  String notifBookingPendingBody(String hotel, String dates) {
+    return '$hotel · $dates. Paiement à régler à l\'hôtel.';
+  }
+
+  @override
+  String get navExplore => 'Explorer';
+
+  @override
+  String get tabMap => 'Carte';
+
+  @override
+  String get tabList => 'Liste';
+
+  @override
+  String get registerAsAdmin => 'S\'inscrire en tant qu\'administrateur';
+
+  @override
+  String get adminCode => 'Code administrateur';
+
+  @override
+  String get errorAdminCode => 'Code administrateur invalide.';
+
+  @override
+  String get errorAccountDisabled =>
+      'Ce compte a été bloqué par un administrateur.';
+
+  @override
+  String get adminTitle => 'Administration';
+
+  @override
+  String get adminDashboard => 'Tableau de bord';
+
+  @override
+  String get adminBookings => 'Réservations';
+
+  @override
+  String get adminHotels => 'Hôtels';
+
+  @override
+  String get adminUsers => 'Utilisateurs';
+
+  @override
+  String get clientView => 'Vue client';
+
+  @override
+  String get revenue => 'Revenus (réservations confirmées)';
+
+  @override
+  String get recentBookings => 'Dernières réservations';
+
+  @override
+  String get searchBookingsHint => 'Hôtel, ville ou e-mail client...';
+
+  @override
+  String get markConfirmed => 'Confirmer';
+
+  @override
+  String get markPending => 'Mettre en attente';
+
+  @override
+  String get markCancelled => 'Annuler la réservation';
+
+  @override
+  String get bookingUpdated => 'Réservation mise à jour';
+
+  @override
+  String get bookingDeleted => 'Réservation supprimée';
+
+  @override
+  String get delete => 'Supprimer';
+
+  @override
+  String get edit => 'Modifier';
+
+  @override
+  String get save => 'Enregistrer';
+
+  @override
+  String deleteQuestion(String name) {
+    return 'Supprimer « $name » ?';
+  }
+
+  @override
+  String get irreversible => 'Cette action est irréversible.';
+
+  @override
+  String get addHotel => 'Ajouter un hôtel';
+
+  @override
+  String get editHotel => 'Modifier l\'hôtel';
+
+  @override
+  String get hotelName => 'Nom de l\'hôtel';
+
+  @override
+  String get latitude => 'Latitude';
+
+  @override
+  String get longitude => 'Longitude';
+
+  @override
+  String get pricePerNightTnd => 'Prix par nuit (TND)';
+
+  @override
+  String get stars => 'Étoiles';
+
+  @override
+  String get invalidNumber => 'Nombre invalide';
+
+  @override
+  String get hotelSaved => 'Hôtel enregistré';
+
+  @override
+  String get hotelDeleted => 'Hôtel supprimé';
+
+  @override
+  String get noHotels => 'Aucun hôtel';
+
+  @override
+  String noHotelsDesc(int count) {
+    return 'Les clients voient le catalogue intégré ($count hôtels). Importez-le pour pouvoir le gérer.';
+  }
+
+  @override
+  String get importHotels => 'Importer les hôtels';
+
+  @override
+  String hotelsImported(int count) {
+    return '$count hôtels importés';
+  }
+
+  @override
+  String get searchUsersHint => 'Rechercher un e-mail...';
+
+  @override
+  String get noUsers => 'Aucun utilisateur';
+
+  @override
+  String get you => '(vous)';
+
+  @override
+  String get roleAdmin => 'Admin';
+
+  @override
+  String get roleUser => 'Client';
+
+  @override
+  String get blocked => 'Bloqué';
+
+  @override
+  String get makeAdmin => 'Nommer administrateur';
+
+  @override
+  String get removeAdmin => 'Retirer les droits admin';
+
+  @override
+  String get blockUser => 'Bloquer';
+
+  @override
+  String get unblockUser => 'Débloquer';
+
+  @override
+  String get userUpdated => 'Utilisateur mis à jour';
 }

@@ -3,7 +3,10 @@ import 'package:intl/intl.dart';
 
 import '../../l10n/l10n.dart';
 import '../../models/hotel.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/animations.dart';
 import '../../widgets/language_menu_button.dart';
+import '../../widgets/theme_toggle_button.dart';
 import 'payment_screen.dart';
 
 class DateSelectionScreen extends StatefulWidget {
@@ -27,20 +30,18 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
     return DateTime(n.year, n.month, n.day);
   }
 
-  int get nights =>
-      (arrival != null && departure != null)
-          ? departure!.difference(arrival!).inDays
-          : 0;
+  int get nights => (arrival != null && departure != null)
+      ? departure!.difference(arrival!).inDays
+      : 0;
 
   String _fmt(DateTime? d) => d == null
       ? '--/--/----'
       : '${d.day.toString().padLeft(2, '0')}/'
-          '${d.month.toString().padLeft(2, '0')}/${d.year}';
+            '${d.month.toString().padLeft(2, '0')}/${d.year}';
 
   // Day name in the current language (lundi / Monday / الاثنين).
-  String _weekday(DateTime? d) => d == null
-      ? '--'
-      : DateFormat.EEEE(context.l10n.localeName).format(d);
+  String _weekday(DateTime? d) =>
+      d == null ? '--' : DateFormat.EEEE(context.l10n.localeName).format(d);
 
   Future<void> _pickArrival() async {
     final picked = await showDatePicker(
@@ -101,7 +102,7 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
         title: Text(context.l10n.appName),
         backgroundColor: const Color(0xFF212529),
         foregroundColor: Colors.white,
-        actions: const [LanguageMenuButton()],
+        actions: const [ThemeToggleButton(), LanguageMenuButton()],
       ),
       body: Container(
         width: double.infinity,
@@ -181,14 +182,32 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(l.selectedHotel,
-                  style: const TextStyle(color: Colors.white70)),
-              const SizedBox(height: 4),
-              Text(h.name,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold)),
+              Row(
+                children: [
+                  HotelAvatar(hotel: h),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l.selectedHotel,
+                          style: const TextStyle(color: Colors.white70),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          h.name,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 8),
               Row(
                 children: List.generate(
@@ -197,9 +216,13 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              Text(l.pricePerNightShort('${h.pricePerNight}'),
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w600)),
+              Text(
+                l.pricePerNightShort('${h.pricePerNight}'),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const SizedBox(height: 12),
               Wrap(
                 spacing: 24,
@@ -216,11 +239,14 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
         ),
         if (!compact) ...[
           const SizedBox(height: 28),
-          Text(l.whyBookNow,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600)),
+          Text(
+            l.whyBookNow,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(height: 12),
           _Reason(l.reasonBestPrice, l.reasonBestPriceDesc),
           _Reason(l.reasonFreeCancel, l.reasonFreeCancelDesc),
@@ -244,14 +270,17 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(l.selectYourDates,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontSize: 26, fontWeight: FontWeight.bold)),
+            Text(
+              l.selectYourDates,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 6),
-            Text(l.selectYourDatesSubtitle,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.black54)),
+            Text(
+              l.selectYourDatesSubtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: context.colors.onSurfaceVariant),
+            ),
             const SizedBox(height: 20),
             const _BookingStepper(current: 2),
             const SizedBox(height: 20),
@@ -260,7 +289,7 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFFF1F4F9),
+                color: context.colors.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -269,27 +298,37 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(l.destination(h.city),
-                            style: const TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF0B3D91))),
+                        Text(
+                          l.destination(h.city),
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            color: context.colors.primary,
+                          ),
+                        ),
                         const SizedBox(height: 4),
-                        Text(h.name,
-                            style: const TextStyle(color: Colors.black54)),
+                        Text(
+                          h.name,
+                          style: TextStyle(
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF0D6EFD),
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: Text(l.selected,
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 11)),
+                    child: Text(
+                      l.selected,
+                      style: const TextStyle(color: Colors.white, fontSize: 11),
+                    ),
                   ),
                 ],
               ),
@@ -297,44 +336,53 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
             const SizedBox(height: 20),
 
             // Date fields
-            LayoutBuilder(builder: (context, c) {
-              final arrivalField = _DateField(
-                label: l.arrivalDate,
-                value: arrival == null ? null : _fmt(arrival),
-                helper: l.selectArrivalHelper,
-                onTap: _pickArrival,
-              );
-              final departureField = _DateField(
-                label: l.departureDate,
-                value: departure == null ? null : _fmt(departure),
-                helper: l.stayDurationHelper(
-                    nights > 0 ? l.nightsCount(nights) : '--'),
-                onTap: _pickDeparture,
-              );
-              if (c.maxWidth < 420) {
-                return Column(children: [
-                  arrivalField,
-                  const SizedBox(height: 16),
-                  departureField,
-                ]);
-              }
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: arrivalField),
-                  const SizedBox(width: 16),
-                  Expanded(child: departureField),
-                ],
-              );
-            }),
+            LayoutBuilder(
+              builder: (context, c) {
+                final arrivalField = _DateField(
+                  label: l.arrivalDate,
+                  value: arrival == null ? null : _fmt(arrival),
+                  helper: l.selectArrivalHelper,
+                  onTap: _pickArrival,
+                );
+                final departureField = _DateField(
+                  label: l.departureDate,
+                  value: departure == null ? null : _fmt(departure),
+                  helper: l.stayDurationHelper(
+                    nights > 0 ? l.nightsCount(nights) : '--',
+                  ),
+                  onTap: _pickDeparture,
+                );
+                if (c.maxWidth < 420) {
+                  return Column(
+                    children: [
+                      arrivalField,
+                      const SizedBox(height: 16),
+                      departureField,
+                    ],
+                  );
+                }
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: arrivalField),
+                    const SizedBox(width: 16),
+                    Expanded(child: departureField),
+                  ],
+                );
+              },
+            ),
             const SizedBox(height: 16),
 
             // Suggestions
             Row(
               children: [
-                Text(l.suggestions,
-                    style:
-                        const TextStyle(color: Colors.black54, fontSize: 13)),
+                Text(
+                  l.suggestions,
+                  style: TextStyle(
+                    color: context.colors.onSurfaceVariant,
+                    fontSize: 13,
+                  ),
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Wrap(
@@ -351,37 +399,66 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Summary
-            Container(
+            // Summary (highlighted once both dates are valid)
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeOut,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8F9FA),
-                borderRadius: BorderRadius.circular(12),
+                color: canContinue
+                    ? _purple.withValues(alpha: 0.12)
+                    : context.colors.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(canContinue ? 18 : 12),
+                border: Border.all(
+                  color: canContinue ? _purple : Colors.transparent,
+                  width: 2,
+                ),
               ),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _SummaryDate(l.arrival.toUpperCase(), _fmt(arrival),
-                          _weekday(arrival)),
-                      _SummaryDate(l.departure.toUpperCase(), _fmt(departure),
-                          _weekday(departure)),
+                      _SummaryDate(
+                        l.arrival.toUpperCase(),
+                        _fmt(arrival),
+                        _weekday(arrival),
+                      ),
+                      _SummaryDate(
+                        l.departure.toUpperCase(),
+                        _fmt(departure),
+                        _weekday(departure),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  Text(l.nightsInCity(nights, h.city),
-                      style: const TextStyle(fontWeight: FontWeight.w600)),
-                  if (canContinue) ...[
-                    const SizedBox(height: 6),
-                    Text(
-                        l.totalWithAmount(
-                            l.amountTnd('${nights * h.pricePerNight}')),
-                        style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: _purpleDark)),
-                  ],
+                  Text(
+                    l.nightsInCity(nights, h.city),
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                    child: AnimatedOpacity(
+                      opacity: canContinue ? 1 : 0,
+                      duration: const Duration(milliseconds: 400),
+                      child: canContinue
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 6),
+                              child: Text(
+                                l.totalWithAmount(
+                                  l.amountTnd('${nights * h.pricePerNight}'),
+                                ),
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: _purpleDark,
+                                ),
+                              ),
+                            )
+                          : const SizedBox(width: double.infinity),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -395,11 +472,16 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
                 style: FilledButton.styleFrom(
                   backgroundColor: _purple,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-                child: Text(l.continueButton,
-                    style: const TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.w600)),
+                child: Text(
+                  l.continueButton,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -409,7 +491,8 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
                 onPressed: () => Navigator.pop(context),
                 style: OutlinedButton.styleFrom(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
                 child: Text(l.changeDestination),
               ),
@@ -430,8 +513,8 @@ class _Perk extends StatelessWidget {
   const _Perk(this.text);
 
   @override
-  Widget build(BuildContext context) => Text(text,
-      style: const TextStyle(color: Colors.white, fontSize: 13));
+  Widget build(BuildContext context) =>
+      Text(text, style: const TextStyle(color: Colors.white, fontSize: 13));
 }
 
 class _Reason extends StatelessWidget {
@@ -460,12 +543,17 @@ class _Reason extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w600)),
-                Text(subtitle,
-                    style:
-                        const TextStyle(color: Colors.white70, fontSize: 13)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: const TextStyle(color: Colors.white70, fontSize: 13),
+                ),
               ],
             ),
           ),
@@ -499,20 +587,32 @@ class _BookingStepper extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: (done || active) ? _color : const Color(0xFFE9ECEF),
+                color: (done || active)
+                    ? _color
+                    : context.colors.surfaceContainerHighest,
               ),
               child: done
                   ? const Icon(Icons.check, color: Colors.white, size: 18)
-                  : Text('$step',
+                  : Text(
+                      '$step',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: active ? Colors.white : Colors.black45)),
+                        fontWeight: FontWeight.bold,
+                        color: active
+                            ? Colors.white
+                            : context.colors.onSurfaceVariant,
+                      ),
+                    ),
             ),
             const SizedBox(height: 4),
-            Text(labels[i],
-                style: TextStyle(
-                    fontSize: 12,
-                    color: (done || active) ? _color : Colors.black45)),
+            Text(
+              labels[i],
+              style: TextStyle(
+                fontSize: 12,
+                color: (done || active)
+                    ? _color
+                    : context.colors.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       );
@@ -523,14 +623,19 @@ class _BookingStepper extends StatelessWidget {
               padding: const EdgeInsets.only(top: 15, left: 4, right: 4),
               child: Container(
                 height: 2,
-                color: step < current ? _color : const Color(0xFFE9ECEF),
+                color: step < current
+                    ? _color
+                    : context.colors.surfaceContainerHighest,
               ),
             ),
           ),
         );
       }
     }
-    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: children);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
   }
 }
 
@@ -555,8 +660,10 @@ class _DateField extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: Text(label,
-                  style: const TextStyle(fontWeight: FontWeight.w600)),
+              child: Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -564,8 +671,10 @@ class _DateField extends StatelessWidget {
                 color: const Color(0xFFFFE5E5),
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: Text(context.l10n.required,
-                  style: const TextStyle(color: Colors.red, fontSize: 11)),
+              child: Text(
+                context.l10n.required,
+                style: const TextStyle(color: Colors.red, fontSize: 11),
+              ),
             ),
           ],
         ),
@@ -573,28 +682,51 @@ class _DateField extends StatelessWidget {
         InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(8),
-          child: Container(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
             height: 48,
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.black26),
+              color: value == null
+                  ? Colors.transparent
+                  : const Color(0xFF667EEA).withValues(alpha: 0.10),
+              border: Border.all(
+                color: value == null
+                    ? context.colors.outlineVariant
+                    : const Color(0xFF667EEA),
+                width: value == null ? 1 : 2,
+              ),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               children: [
-                const Icon(Icons.calendar_today, size: 18),
+                Icon(
+                  value == null ? Icons.calendar_today : Icons.event_available,
+                  size: 18,
+                ),
                 const SizedBox(width: 10),
-                Text(value ?? context.l10n.datePlaceholder,
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: value == null ? Colors.black38 : Colors.black87)),
+                Text(
+                  value ?? context.l10n.datePlaceholder,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: value == null
+                        ? context.colors.outline
+                        : context.colors.onSurface,
+                  ),
+                ),
               ],
             ),
           ),
         ),
         const SizedBox(height: 6),
-        Text(helper,
-            style: const TextStyle(color: Colors.black54, fontSize: 12)),
+        Text(
+          helper,
+          style: TextStyle(
+            color: context.colors.onSurfaceVariant,
+            fontSize: 12,
+          ),
+        ),
       ],
     );
   }
@@ -630,14 +762,26 @@ class _SummaryDate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(label,
-            style: const TextStyle(fontSize: 11, color: Colors.black54)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: context.colors.onSurfaceVariant,
+          ),
+        ),
         const SizedBox(height: 6),
-        Text(date,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Text(
+          date,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 4),
-        Text(weekday,
-            style: const TextStyle(fontSize: 12, color: Colors.black45)),
+        Text(
+          weekday,
+          style: TextStyle(
+            fontSize: 12,
+            color: context.colors.onSurfaceVariant,
+          ),
+        ),
       ],
     );
   }
